@@ -30,4 +30,4 @@ This program is only about 60% effective. Its success depends on website loading
 ## Caution
 
 - Not my fault if u get banned lol
-- Maybe use without your accoung on
+- Maybe use without your account on
