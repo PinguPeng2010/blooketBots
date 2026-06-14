@@ -16,6 +16,7 @@ The script depends on Python and the following packages:
 - `pyautogui`
 - `pynput`
 - `mss`
+- `pyperclip`
 
 - An implementation to auto install the scripts will happen.
 

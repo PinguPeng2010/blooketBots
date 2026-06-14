@@ -4,6 +4,7 @@ import webbrowser
 import time
 import mss
 import random
+import pyperclip
 
 bots = {}   # A dictionary to store the answer status of the bots. The value can either be 'question' or 'red' depending on if the bot is ready to answer a question or got the answer wrong.
 
@@ -35,7 +36,7 @@ keyboard = Controller() # For pynput
 
 
 
-def nextTab():      # Goes to the next tab using ctrl + tab
+def nextTab():                      # Goes to the next tab using ctrl + tab
 
     with keyboard.pressed(Key.ctrl):
 
@@ -44,7 +45,7 @@ def nextTab():      # Goes to the next tab using ctrl + tab
 
 
 
-def detectPixel(x, y):      # Detects the RGB value of a pixel using mss.
+def detectPixel(x, y):              # Detects the RGB value of a pixel using mss.
 
     with mss.MSS() as sct:
 
@@ -55,13 +56,13 @@ def detectPixel(x, y):      # Detects the RGB value of a pixel using mss.
 
 
 
-def pickAnswer(start, end):     # Chooses a random answer or box to click.
+def pickAnswer(start, end):         # Chooses a random answer or box to click.
     
     return random.randint(start, end)
 
 
 
-def screenType():   # Identifies the screen type using R G B values of screen picture.
+def screenType():                   # Identifies the screen type using R G B values of screen picture.
     
     if detectPixel(930, 400) == (196, 58, 53): # Red
         return "red"
@@ -86,17 +87,32 @@ def screenType():   # Identifies the screen type using R G B values of screen pi
     else:
         raise Exception("Unknown screen type")
     
-def getBotStatus(bot):
+def getBotStatus(bot):              # Gets the bot's status
     global bots
+
     return bots[bot]
 
-def changeBotStatus(bot, status):
+def changeBotStatus(bot, status):   # Changes the bot's global status
     global bots
+
     try:
         bots[bot] = status
         return True
+    
     except:
         raise Exception(f'Bot {bot} was unable to change status')
+
+def safeCopy(text):                 # Ensures that the text being copied does not paste too fast
+    pyperclip.copy(text)
+
+    for _ in range(20):  # up to ~20ms
+
+        if pyperclip.paste() == text:
+            return
+        
+        time.sleep(0.001)
+
+
 
 # For each bot enter code and switch to the next tab #
 
@@ -195,60 +211,80 @@ nextTab()
 
 # Every bot must now open ctrl+shift+j, paste in and close the console.
 
-time.sleep(20)
+time.sleep(10)
+
+
+
+# for bot in bots:
+
+#     pyperclip.copy(allCorrect)    # Copy the all correct js script to clipboard
+
+#     with keyboard.pressed(Key.ctrl):
+
+#         with keyboard.pressed(Key.shift):
+
+#             keyboard.press('j')
+#             keyboard.release('j')
+    
+#     with keyboard.pressed(Key.ctrl):
+
+#         keyboard.press('v')
+#         keyboard.release('v')
+
+#     time.sleep(0.2)
+
+#     pyautogui.press('enter')
+#     time.sleep(0.05)
+#     with keyboard.pressed(Key.ctrl):
+
+#         with keyboard.pressed(Key.shift):
+
+#             keyboard.press('j')
+#             keyboard.release('j')
+
+#     changeBotStatus(bot, 'allcorrect')
+#     print(f"Bot {bot}'s status is {getBotStatus(bot)}")
+
+#     time.sleep(0.1)
+
+#     nextTab()
+
+# Now the always triple cheat is added
 
 for bot in bots:
+
     with keyboard.pressed(Key.ctrl):
+
         with keyboard.pressed(Key.shift):
+
             keyboard.press('j')
             keyboard.release('j')
+
+    safeCopy(allCorrect)    # Copies the all triple text
+    pyperclip.paste()
+
+    pyautogui.press('enter')
+    time.sleep(0.5)
     
-    pyautogui.typewrite(allCorrect, interval=0)
+    safeCopy(allTriple)
+    pyperclip.paste()
+
     pyautogui.press('enter')
-    time.sleep(0.2)
-    pyautogui.typewrite(allTriple, interval=0)
-    pyautogui.press('enter')
+    time.sleep(0.5)
+
     with keyboard.pressed(Key.ctrl):
+
         with keyboard.pressed(Key.shift):
+
             keyboard.press('j')
             keyboard.release('j')
+
 
     changeBotStatus(bot, 'cheatson')
     print(f"Bot {bot}'s status is {getBotStatus(bot)}")
+
     time.sleep(0.1)
+
     nextTab()
 
  
-
-
-
-
-# This cheat makes every answer correct #
-
-
-
-
-
-
-
-# finished = False
-
-
-# while not finished:
-
-#     # The bot first must identify if it is on an answer screen, a red screen, the loading screen, or the finish screen.
-
-#     screen = screenType()
-
-#     print(f"Bot {botName+str(botNameStartNumber+bot)}'s Screen type is {screen}")
-    
-#     if screen == 'loading':
-#         continue
-        
-
-
-    # If the bot has answered correctly, it can now click a chest
-
-        
-
-
